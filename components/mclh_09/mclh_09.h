@@ -2,14 +2,14 @@
 
 #include "esphome/core/component.h"
 #include "esphome/components/sensor/sensor.h"
-#include "esphome/components/esp32_ble_tracker/esp32_ble_tracker.h"
+#include "esphome/components/ble_client/ble_client.h"
 
 #ifdef USE_ESP32
 
 namespace esphome {
 namespace mclh_09 {
 
-class MCLH09 : public Component, public esp32_ble_tracker::ESPBTDeviceListener {
+class MCLH09 : public ble_client::BLEClientBase {
  public:
   void set_address(uint64_t address) { address_ = address; }
   void set_temperature_sensor(sensor::Sensor* temperature) { temperature_sensor_ = temperature; }
