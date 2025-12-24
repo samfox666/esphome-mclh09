@@ -3,7 +3,7 @@ import esphome.config_validation as cv
 from esphome.components import ble_client, sensor
 from esphome.const import (
     CONF_ID,
-    CONF_MAC_ADDRESS,
+    CONF_BLE_CLIENT_ID,  # <-- добавляем
     CONF_TEMPERATURE,
     CONF_HUMIDITY,
     CONF_BATTERY_LEVEL,
@@ -26,7 +26,7 @@ MCLH09 = mclh_ns.class_("MCLH09", ble_client.BLEClientNode)
 CONFIG_SCHEMA = cv.Schema(
     {
         cv.GenerateID(): cv.declare_id(MCLH09),
-        cv.Required(CONF_MAC_ADDRESS): cv.mac_address,
+        cv.Required(CONF_BLE_CLIENT_ID): cv.use_id(ble_client.BLEClient),  # <-- добавляем
         cv.Optional(CONF_TEMPERATURE): sensor.sensor_schema(
             unit_of_measurement=UNIT_CELSIUS,
             accuracy_decimals=1,
@@ -58,8 +58,9 @@ CONFIG_SCHEMA = cv.Schema(
 async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
 
-    # Устанавливаем MAC-адрес
-    cg.add(var.set_address(config[CONF_MAC_ADDRESS].as_hex))
+    # Получаем BLE-клиента
+    paren = await cg.get_variable(config[CONF_BLE_CLIENT_ID])
+    cg.add(var.set_ble_client(paren))
 
     # Регистрируем сенсоры
     if CONF_TEMPERATURE in config:
@@ -75,5 +76,5 @@ async def to_code(config):
         sens = await sensor.new_sensor(config[CONF_ILLUMINANCE])
         cg.add(var.set_illuminance_sensor(sens))
 
-    # Регистрируем BLE-компонент (с config)
+    # Регистрируем BLE-компонент
     await ble_client.register_ble_node(var, config)
