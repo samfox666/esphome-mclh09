@@ -39,5 +39,5 @@ async def to_code(config):
         sens = await sensor.new_sensor(config[CONF_TEMPERATURE])
         cg.add(var.set_temperature_sensor(sens))
 
-    # Регистрируем BLE-компонент
-    await esp32_ble_tracker.register_ble_component(var, config)
+    # Регистрируем BLE-компонент (новый способ)
+    cg.add(esp32_ble_tracker.global_esp32_ble_tracker.add_listener(var))
