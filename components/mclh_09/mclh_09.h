@@ -2,14 +2,14 @@
 
 #include "esphome/core/component.h"
 #include "esphome/components/sensor/sensor.h"
-#include "esphome/components/ble_client/ble_client.h"
+#include "esphome/components/esp32_ble_tracker/esp32_ble_tracker.h"
 
 #ifdef USE_ESP32
 
 namespace esphome {
 namespace mclh_09 {
 
-class MCLH09 : public Component, public ble_client::BLEClientNode {
+class MCLH09 : public Component, public esp32_ble_tracker::ESPBTDeviceListener {
  public:
   void set_address(uint64_t address) { address_ = address; }
   void set_temperature_sensor(sensor::Sensor* temperature) { temperature_sensor_ = temperature; }
@@ -22,8 +22,7 @@ class MCLH09 : public Component, public ble_client::BLEClientNode {
   float get_setup_priority() const override { return setup_priority::DATA; }
 
   // Новый метод — вызывается при BLE-обнаружении
-  void gattc_event_handler(esp_gattc_cb_event_t event, esp_gatt_if_t gattc_if,
-                           esp_ble_gattc_cb_param_t *param) override;
+  void on_ble_advertise(esp32_ble_tracker::ESPBTDevice &device) override;
 
  protected:
   uint64_t address_{0};
