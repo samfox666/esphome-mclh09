@@ -17,7 +17,7 @@ class MCLH09 : public esp32_ble_tracker::ESPBTDeviceListener, public Component {
   void set_illuminance_sensor(sensor::Sensor *illuminance) { illuminance_sensor_ = illuminance; }
   void set_soil_moisture_sensor(sensor::Sensor *soil_moisture) { soil_moisture_sensor_ = soil_moisture; }
   void set_battery_level_sensor(sensor::Sensor *battery_level) { battery_level_sensor_ = battery_level; }
-  void set_update_interval(uint32_t interval) { /* можно использовать для периодического пробуждения */ }
+  void set_update_interval(uint32_t interval) { /* reserved */ }
 
   bool parse_device(const esp32_ble_tracker::ESPBTDevice &device) override;
   void dump_config() override;
@@ -35,4 +35,4 @@ class MCLH09 : public esp32_ble_tracker::ESPBTDeviceListener, public Component {
 }  // namespace mclh_09
 }  // namespace esphome
 
-#endif
+#endif  // USE_ESP32
