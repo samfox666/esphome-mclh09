@@ -1,6 +1,6 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
-from esphome.components import ble_client, sensor
+from esphome.components import esp32_ble_tracker, sensor
 from esphome.const import (
     CONF_ID,
     CONF_MAC_ADDRESS,
@@ -10,11 +10,10 @@ from esphome.const import (
     UNIT_CELSIUS,
 )
 
-# Namespace
-mclh_ns = cg.esphome_ns.namespace("mclh_09")
-MCLH09 = mclh_ns.class_("MCLH09", ble_client.BLEClientBase)
+# Импортируем из __init__.py
+from . import MCLH09
 
-# Определяем схему конфигурации
+# Схема для sensor.mclh_09
 CONFIG_SCHEMA = cv.Schema(
     {
         cv.GenerateID(): cv.declare_id(MCLH09),
@@ -28,7 +27,6 @@ CONFIG_SCHEMA = cv.Schema(
     }
 ).extend(cv.COMPONENT_SCHEMA)
 
-# Основная функция для генерации кода
 async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(var, config)
@@ -41,5 +39,5 @@ async def to_code(config):
         sens = await sensor.new_sensor(config[CONF_TEMPERATURE])
         cg.add(var.set_temperature_sensor(sens))
 
-    # Регистрируем BLE-компонент
-    await ble_client.register_ble_node(var, config)
+    # Регистрируем BLE-компонент (новый способ)
+    cg.add(esp32_ble_tracker.global_esp32_ble_tracker.add_listener(var))
