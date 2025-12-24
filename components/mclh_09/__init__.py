@@ -10,7 +10,7 @@ MCLH09 = mclh_ns.class_("MCLH09", cg.Component)
 CONFIG_SCHEMA = cv.Schema(
     {
         cv.GenerateID(): cv.declare_id(MCLH09),
-        cv.Required(CONF_BLE_CLIENT_ID): cv.use_id("ble_client.BLEClient"),  # <-- строка
+        cv.Required(CONF_BLE_CLIENT_ID): cv.use_id(ble_client.BLEClient),
     }
 ).extend(cv.COMPONENT_SCHEMA)
 
