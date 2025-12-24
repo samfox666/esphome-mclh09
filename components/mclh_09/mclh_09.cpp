@@ -8,22 +8,24 @@ namespace mclh_09 {
 
 static const char *const TAG = "mclh_09";
 
-bool MCLH09::parse_device(const esp32_ble_tracker::ESPBTDevice &device) {
+void MCLH09::on_ble_advertise(esp32_ble_tracker::ESPBTDevice &device) {
+  // Проверяем MAC-адрес
   if (device.address_uint64() != this->address_) {
-    return false;
+    return;
   }
 
   ESP_LOGD(TAG, "Found MCLH-09 sensor: %s", device.address_str().c_str());
 
+  // Получаем manufacturer data
   const auto &manu_data = device.get_manufacturer_data();
   if (manu_data.size() < 15) {
     ESP_LOGD(TAG, "Data too short (%d)", manu_data.size());
-    return false;
+    return;
   }
 
   if (manu_data[0] != 0xFF || (manu_data[1] != 0x90 && manu_data[1] != 0x80)) {
     ESP_LOGD(TAG, "Not MCLH-09  %02X %02X", manu_data[0], manu_data[1]);
-    return false;
+    return;
   }
 
   size_t offset = 3;
@@ -66,8 +68,6 @@ bool MCLH09::parse_device(const esp32_ble_tracker::ESPBTDevice &device) {
   if (this->battery_level_sensor_ != nullptr && offset < manu_data.size()) {
     this->battery_level_sensor_->publish_state(manu_data[offset]);
   }
-
-  return true;
 }
 
 void MCLH09::dump_config() {
