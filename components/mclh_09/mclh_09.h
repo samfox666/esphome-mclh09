@@ -9,7 +9,7 @@
 namespace esphome {
 namespace mclh_09 {
 
-class MCLH09 : public ble_client::BLEClientNode {
+class MCLH09 : public Component, public ble_client::BLEClientNode {
  public:
   void set_address(uint64_t address) { address_ = address; }
   void set_temperature_sensor(sensor::Sensor* temperature) { temperature_sensor_ = temperature; }
