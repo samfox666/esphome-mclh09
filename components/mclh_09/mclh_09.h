@@ -3,6 +3,7 @@
 #include "esphome/core/component.h"
 #include "esphome/components/sensor/sensor.h"
 
+// Всё, что связано с ESP32 BLE — только если используется ESP32
 #ifdef USE_ESP32
 #include "esphome/components/esp32_ble_tracker/esp32_ble_tracker.h"
 
