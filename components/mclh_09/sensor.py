@@ -27,13 +27,8 @@ MCLH09 = mclh_09_ns.class_(
     "MCLH09", esp32_ble_tracker.ESPBTDeviceListener, cg.Component
 )
 
-def validate_config(config):
-    if CONF_MAC_ADDRESS not in config:
-        raise cv.Invalid("MAC address is required")
-    return config
-
 CONFIG_SCHEMA = cv.All(
-    sensor.SENSOR_SCHEMA.extend(
+    cv.Schema(
         {
             cv.GenerateID(): cv.declare_id(MCLH09),
             cv.Required(CONF_MAC_ADDRESS): cv.mac_address,
@@ -69,7 +64,13 @@ CONFIG_SCHEMA = cv.All(
             cv.Optional("update_interval", default="15min"): cv.update_interval,
         }
     ).extend(cv.COMPONENT_SCHEMA),
-    validate_config,
+    cv.has_at_least_one_key(
+        CONF_TEMPERATURE,
+        CONF_HUMIDITY,
+        CONF_BATTERY_LEVEL,
+        CONF_SOIL_MOISTURE,
+        CONF_ILLUMINANCE,
+    ),
 )
 
 async def to_code(config):
@@ -77,7 +78,7 @@ async def to_code(config):
     await cg.register_component(var, config)
     cg.add(var.set_address(config[CONF_MAC_ADDRESS].as_hex))
 
-    # Регистрируем как BLE listener
+    # Регистрация как BLE listener (правильный способ для ESPHome 2025)
     cg.add(esp32_ble_tracker.global_esp32_ble_tracker.add_listener(var))
 
     if CONF_TEMPERATURE in config:
