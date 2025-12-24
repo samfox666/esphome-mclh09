@@ -26,3 +26,4 @@ async def to_code(config):
     cg.add(esp32_ble_tracker.global_esp32_ble_tracker.add_listener(var))
 
     cg.add(var.set_address(config[CONF_MAC_ADDRESS].as_hex))
+    
