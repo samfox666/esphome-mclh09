@@ -1,14 +1,7 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
-from esphome.components import esp32_ble_tracker, sensor
-from esphome.const import (
-    CONF_ID,
-    CONF_MAC_ADDRESS,
-    CONF_TEMPERATURE,
-    DEVICE_CLASS_TEMPERATURE,
-    STATE_CLASS_MEASUREMENT,
-    UNIT_CELSIUS,
-)
+from esphome.components import esp32_ble_tracker
+from esphome.const import CONF_ID, CONF_MAC_ADDRESS
 
 # Namespace
 mclh_ns = cg.esphome_ns.namespace("mclh_09")
@@ -19,12 +12,6 @@ CONFIG_SCHEMA = cv.Schema(
     {
         cv.GenerateID(): cv.declare_id(MCLH09),
         cv.Required(CONF_MAC_ADDRESS): cv.mac_address,
-        cv.Optional(CONF_TEMPERATURE): sensor.sensor_schema(
-            unit_of_measurement=UNIT_CELSIUS,
-            accuracy_decimals=1,
-            device_class=DEVICE_CLASS_TEMPERATURE,
-            state_class=STATE_CLASS_MEASUREMENT,
-        ),
     }
 ).extend(cv.COMPONENT_SCHEMA)
 
@@ -36,10 +23,8 @@ async def to_code(config):
     # Устанавливаем MAC-адрес
     cg.add(var.set_address(config[CONF_MAC_ADDRESS].as_hex))
 
-    # Регистрируем сенсор температуры
-    if CONF_TEMPERATURE in config:
-        sens = await sensor.new_sensor(config[CONF_TEMPERATURE])
-        cg.add(var.set_temperature_sensor(sens))
-
     # Регистрируем BLE-компонент (новый способ)
-    cg.add(var.set_esp32_ble_tracker(esp32_ble_tracker.global_esp32_ble_tracker))
+    cg.add(esp32_ble_tracker.global_esp32_ble_tracker.add_listener(var))
+
+# Экспортируем MCLH09 и mclh_ns для sensor.py
+mclh_09_ns = mclh_ns
