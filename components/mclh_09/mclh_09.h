@@ -20,6 +20,7 @@ class MCLH09 : public Component, public ble_client::BLEClientNode {
   void dump_config() override;
   float get_setup_priority() const override { return setup_priority::DATA; }
 
+  // Новый метод — вызывается при BLE-событиях
   void gattc_event_handler(esp_gattc_cb_event_t event, esp_gatt_if_t gattc_if,
                            esp_ble_gattc_cb_param_t *param) override;
 
