@@ -1,6 +1,5 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
-from esphome.components import esp32_ble_tracker
 from esphome.const import CONF_ID, CONF_MAC_ADDRESS
 
 # Namespace
@@ -22,9 +21,6 @@ async def to_code(config):
 
     # Устанавливаем MAC-адрес
     cg.add(var.set_address(config[CONF_MAC_ADDRESS].as_hex))
-
-    # Регистрируем BLE-компонент (новый способ)
-    cg.add(esp32_ble_tracker.global_esp32_ble_tracker.add_listener(var))
 
 # Экспортируем MCLH09 и mclh_ns для sensor.py
 mclh_09_ns = mclh_ns
