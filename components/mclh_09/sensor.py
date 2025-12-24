@@ -8,7 +8,6 @@ from esphome.const import (
     CONF_HUMIDITY,
     CONF_BATTERY_LEVEL,
     CONF_ILLUMINANCE,
-    CONF_SOIL_MOISTURE,
     DEVICE_CLASS_TEMPERATURE,
     DEVICE_CLASS_HUMIDITY,
     DEVICE_CLASS_BATTERY,
@@ -51,11 +50,7 @@ CONFIG_SCHEMA = cv.Schema(
             device_class=DEVICE_CLASS_ILLUMINANCE,
             state_class=STATE_CLASS_MEASUREMENT,
         ),
-        cv.Optional(CONF_SOIL_MOISTURE): sensor.sensor_schema(
-            unit_of_measurement=UNIT_PERCENT,
-            accuracy_decimals=0,
-            state_class=STATE_CLASS_MEASUREMENT,
-        ),
+        # soil_moisture добавим как обычное имя
     }
 ).extend(cv.COMPONENT_SCHEMA)
 
@@ -79,8 +74,10 @@ async def to_code(config):
     if CONF_ILLUMINANCE in config:
         sens = await sensor.new_sensor(config[CONF_ILLUMINANCE])
         cg.add(var.set_illuminance_sensor(sens))
-    if CONF_SOIL_MOISTURE in config:
-        sens = await sensor.new_sensor(config[CONF_SOIL_MOISTURE])
+
+    # soil_moisture добавим как обычное имя
+    if "soil_moisture" in config:
+        sens = await sensor.new_sensor(config["soil_moisture"])
         cg.add(var.set_soil_moisture_sensor(sens))
 
     # Регистрируем BLE-компонент (новый способ для 2025.12.2)
