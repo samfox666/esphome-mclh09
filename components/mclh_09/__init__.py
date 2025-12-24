@@ -1,7 +1,6 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
-from esphome.components import esp32_ble_tracker
-from esphome.const import CONF_ID, CONF_MAC_ADDRESS
+from esphome.const import CONF_ID
 
 # Namespace
 mclh_ns = cg.esphome_ns.namespace("mclh_09")
@@ -11,7 +10,7 @@ MCLH09 = mclh_ns.class_("MCLH09", cg.Component)
 CONFIG_SCHEMA = cv.Schema(
     {
         cv.GenerateID(): cv.declare_id(MCLH09),
-        cv.Required(CONF_MAC_ADDRESS): cv.mac_address,
+        cv.Required("ble_client_id"): cv.use_id("ble_client.BLEClient"),  # <-- строка
     }
 ).extend(cv.COMPONENT_SCHEMA)
 
@@ -20,9 +19,9 @@ async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(var, config)
 
-    # Устанавливаем MAC-адрес
-    cg.add(var.set_address(config[CONF_MAC_ADDRESS].as_hex))
+    # Получаем BLE-клиента
+    paren = await cg.get_variable(config["ble_client_id"])
+    cg.add(var.set_ble_client(paren))
 
-    # Регистрируем BLE-компонент (новый способ для 2025.12.2)
-    await esp32_ble_tracker.register_ble_component(var, config)
-    
+# Экспортируем MCLH09 и mclh_ns для sensor.py
+mclh_09_ns = mclh_ns
