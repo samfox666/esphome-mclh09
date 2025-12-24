@@ -1,5 +1,6 @@
 #include "mclh_09.h"
 #include "esphome/core/log.h"
+#include "esphome/components/esp32_ble_tracker/esp32_ble_tracker.h"
 
 #ifdef USE_ESP32
 
@@ -27,30 +28,27 @@ bool MCLH09::parse_device(const esp32_ble_tracker::ESPBTDevice &device) {
     return false;
   }
 
-  // Пропускаем первые 3 байта: FF 90 80
-  size_t offset = 3;
+  size_t offset = 3; // Пропускаем FF 90 80
 
   // Температура: 2 байта, little-endian, в десятых долях °C
-  if (this->temperature_sensor_ != nullptr && manu_data.size() >= offset + 2) {
+  if (this->temperature_sensor_ != nullptr && offset + 2 <= manu_data.size()) {
     uint16_t temp = encode_uint16(manu_data[offset + 1], manu_data[offset]);
-    float temp_c = temp / 10.0f;
-    this->temperature_sensor_->publish_state(temp_c);
+    this->temperature_sensor_->publish_state(temp / 10.0f);
     offset += 2;
   } else {
     offset += 2;
   }
 
   // Влажность: 1 байт (%)
-  if (this->humidity_sensor_ != nullptr && manu_data.size() >= offset + 1) {
-    float hum = manu_data[offset];
-    this->humidity_sensor_->publish_state(hum);
+  if (this->humidity_sensor_ != nullptr && offset < manu_data.size()) {
+    this->humidity_sensor_->publish_state(manu_data[offset]);
     offset += 1;
   } else {
     offset += 1;
   }
 
   // Освещённость: 2 байта, little-endian
-  if (this->illuminance_sensor_ != nullptr && manu_data.size() >= offset + 2) {
+  if (this->illuminance_sensor_ != nullptr && offset + 2 <= manu_data.size()) {
     uint16_t illum = encode_uint16(manu_data[offset + 1], manu_data[offset]);
     this->illuminance_sensor_->publish_state(illum);
     offset += 2;
@@ -59,18 +57,16 @@ bool MCLH09::parse_device(const esp32_ble_tracker::ESPBTDevice &device) {
   }
 
   // Влажность почвы: 1 байт (%)
-  if (this->soil_moisture_sensor_ != nullptr && manu_data.size() >= offset + 1) {
-    float soil = manu_data[offset];
-    this->soil_moisture_sensor_->publish_state(soil);
+  if (this->soil_moisture_sensor_ != nullptr && offset < manu_data.size()) {
+    this->soil_moisture_sensor_->publish_state(manu_data[offset]);
     offset += 1;
   } else {
     offset += 1;
   }
 
   // Уровень заряда: 1 байт (%)
-  if (this->battery_level_sensor_ != nullptr && manu_data.size() >= offset + 1) {
-    float bat = manu_data[offset];
-    this->battery_level_sensor_->publish_state(bat);
+  if (this->battery_level_sensor_ != nullptr && offset < manu_data.size()) {
+    this->battery_level_sensor_->publish_state(manu_data[offset]);
   }
 
   return true;
@@ -83,3 +79,5 @@ void MCLH09::dump_config() {
 
 }  // namespace mclh_09
 }  // namespace esphome
+
+#endif  // USE_ESP32
