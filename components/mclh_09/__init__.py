@@ -35,6 +35,7 @@ async def to_code(config):
 
     # Устанавливаем MAC-адрес
     cg.add(var.set_address(config[CONF_MAC_ADDRESS].as_hex))
+    
 
     # Регистрируем сенсор температуры
     if CONF_TEMPERATURE in config:
