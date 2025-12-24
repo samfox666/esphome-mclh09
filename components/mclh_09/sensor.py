@@ -20,7 +20,7 @@ from esphome.const import (
 
 # Namespace
 mclh_ns = cg.esphome_ns.namespace("mclh_09")
-MCLH09 = mclh_ns.class_("MCLH09", ble_client.BLEClientBase)
+MCLH09 = mclh_ns.class_("MCLH09", ble_client.BLEClientNode)
 
 # Определяем схему конфигурации
 CONFIG_SCHEMA = cv.Schema(
