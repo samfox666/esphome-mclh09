@@ -80,4 +80,5 @@ async def to_code(config):
         cg.add(var.set_soil_moisture_sensor(sens))
 
     # Регистрируем BLE-компонент (новый способ для 2025.12.2)
-    cg.add(esp32_ble_tracker.global_esp32_ble_tracker.add_listener(var))
+    await cg.register_component(var, config)
+    cg.add(esp32_ble_tracker.add_id_device(var))
