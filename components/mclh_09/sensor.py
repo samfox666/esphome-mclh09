@@ -1,6 +1,6 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
-from esphome.components import esp32_ble_tracker, sensor
+from esphome.components import ble_client, sensor
 from esphome.const import (
     CONF_ID,
     CONF_MAC_ADDRESS,
@@ -20,7 +20,7 @@ from esphome.const import (
 
 # Namespace
 mclh_ns = cg.esphome_ns.namespace("mclh_09")
-MCLH09 = mclh_ns.class_("MCLH09", cg.Component)
+MCLH09 = mclh_ns.class_("MCLH09", ble_client.BLEClientBase)
 
 # Определяем схему конфигурации
 CONFIG_SCHEMA = cv.Schema(
@@ -76,5 +76,5 @@ async def to_code(config):
         sens = await sensor.new_sensor(config[CONF_ILLUMINANCE])
         cg.add(var.set_illuminance_sensor(sens))
 
-    # Регистрируем BLE-компонент (новый способ для 2025.12.2)
-    await esp32_ble_tracker.register_ble_component(var, config)
+    # Регистрируем BLE-компонент
+    await ble_client.register_ble_node(var, config)
