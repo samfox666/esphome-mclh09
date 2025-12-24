@@ -75,5 +75,5 @@ async def to_code(config):
         sens = await sensor.new_sensor(config[CONF_ILLUMINANCE])
         cg.add(var.set_illuminance_sensor(sens))
 
-    # Регистрируем BLE-компонент (без конфига - только var)
-    await ble_client.register_ble_node(var)
+    # Регистрируем BLE-компонент (с config)
+    await ble_client.register_ble_node(var, config)
