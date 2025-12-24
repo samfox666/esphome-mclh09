@@ -79,8 +79,7 @@ async def to_code(config):
     await cg.register_component(var, config)
     cg.add(var.set_address(config[CONF_MAC_ADDRESS].as_hex))
 
-    # Регистрация как BLE listener
-    cg.add(esp32_ble_tracker.global_esp32_ble_tracker.add_listener(var))
+    # ❌ УДАЛЕНО: cg.add(esp32_ble_tracker.global_esp32_ble_tracker.add_listener(var))
 
     if CONF_TEMPERATURE in config:
         sens = await sensor.new_sensor(config[CONF_TEMPERATURE])
