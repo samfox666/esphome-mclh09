@@ -34,6 +34,39 @@ bool MCLH09::parse_device(const esp32_ble_tracker::ESPBTDevice &device) {
   if (this->temperature_sensor_ != nullptr && offset + 2 <= manu_data.size()) {
     uint16_t temp = encode_uint16(manu_data[offset + 1], manu_data[offset]);
     this->temperature_sensor_->publish_state(temp / 10.0f);
+    offset += 2;
+  } else {
+    offset += 2;
+  }
+
+  // Влажность: 1 байт (%)
+  if (this->humidity_sensor_ != nullptr && offset < manu_data.size()) {
+    this->humidity_sensor_->publish_state(manu_data[offset]);
+    offset += 1;
+  } else {
+    offset += 1;
+  }
+
+  // Освещённость: 2 байта, little-endian
+  if (this->illuminance_sensor_ != nullptr && offset + 2 <= manu_data.size()) {
+    uint16_t illum = encode_uint16(manu_data[offset + 1], manu_data[offset]);
+    this->illuminance_sensor_->publish_state(illum);
+    offset += 2;
+  } else {
+    offset += 2;
+  }
+
+  // Влажность почвы: 1 байт (%)
+  if (this->soil_moisture_sensor_ != nullptr && offset < manu_data.size()) {
+    this->soil_moisture_sensor_->publish_state(manu_data[offset]);
+    offset += 1;
+  } else {
+    offset += 1;
+  }
+
+  // Уровень заряда: 1 байт (%)
+  if (this->battery_level_sensor_ != nullptr && offset < manu_data.size()) {
+    this->battery_level_sensor_->publish_state(manu_data[offset]);
   }
 
   return true;
