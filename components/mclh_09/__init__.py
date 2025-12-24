@@ -23,8 +23,8 @@ async def to_code(config):
     # Устанавливаем MAC-адрес
     cg.add(var.set_address(config[CONF_MAC_ADDRESS].as_hex))
 
-    # Регистрируем BLE-компонент
-    await esp32_ble_tracker.register_ble_component(var, config)
+    # Регистрируем BLE-компонент (новый способ)
+    cg.add(esp32_ble_tracker.global_esp32_ble_tracker.add_listener(var))
 
 # Экспортируем MCLH09 и mclh_ns для sensor.py
 mclh_09_ns = mclh_ns
