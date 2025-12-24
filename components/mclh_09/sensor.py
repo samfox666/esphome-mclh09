@@ -1,8 +1,9 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
-from esphome.components import ble_client, sensor
+from esphome.components import esp32_ble_tracker, sensor
 from esphome.const import (
     CONF_ID,
+    CONF_MAC_ADDRESS,
     CONF_TEMPERATURE,
     CONF_HUMIDITY,
     CONF_BATTERY_LEVEL,
@@ -19,13 +20,13 @@ from esphome.const import (
 
 # Namespace
 mclh_ns = cg.esphome_ns.namespace("mclh_09")
-MCLH09 = mclh_ns.class_("MCLH09", ble_client.BLEClientNode)
+MCLH09 = mclh_ns.class_("MCLH09", cg.Component)
 
 # Определяем схему конфигурации
 CONFIG_SCHEMA = cv.Schema(
     {
         cv.GenerateID(): cv.declare_id(MCLH09),
-        cv.Required("ble_client_id"): cv.use_id(ble_client.BLEClient),  # <-- строка
+        cv.Required(CONF_MAC_ADDRESS): cv.mac_address,
         cv.Optional(CONF_TEMPERATURE): sensor.sensor_schema(
             unit_of_measurement=UNIT_CELSIUS,
             accuracy_decimals=1,
@@ -56,10 +57,10 @@ CONFIG_SCHEMA = cv.Schema(
 # Основная функция для генерации кода
 async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
+    await cg.register_component(var, config)
 
-    # Получаем BLE-клиента
-    paren = await cg.get_variable(config["ble_client_id"])
-    cg.add(var.set_ble_client_parent(paren))  # <-- исправлено
+    # Устанавливаем MAC-адрес
+    cg.add(var.set_address(config[CONF_MAC_ADDRESS].as_hex))
 
     # Регистрируем сенсоры
     if CONF_TEMPERATURE in config:
@@ -75,5 +76,5 @@ async def to_code(config):
         sens = await sensor.new_sensor(config[CONF_ILLUMINANCE])
         cg.add(var.set_illuminance_sensor(sens))
 
-    # Регистрируем BLE-компонент
-    await ble_client.register_ble_node(var, config)
+    # Регистрируем BLE-компонент (новый способ для 2025.12.2)
+    await esp32_ble_tracker.register_ble_component(var, config)
