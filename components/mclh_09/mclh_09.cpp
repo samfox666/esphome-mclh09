@@ -74,7 +74,13 @@ bool MCLH09::parse_device(const esp32_ble_tracker::ESPBTDevice &device) {
 
 void MCLH09::dump_config() {
   ESP_LOGCONFIG(TAG, "MCLH-09:");
-  ESP_LOGCONFIG(TAG, "  MAC Address: %s", this->address_str().c_str());
+  ESP_LOGCONFIG(TAG, "  MAC Address: %02X:%02X:%02X:%02X:%02X:%02X",
+                (uint8_t)(address_ >> 40) & 0xFF,
+                (uint8_t)(address_ >> 32) & 0xFF,
+                (uint8_t)(address_ >> 24) & 0xFF,
+                (uint8_t)(address_ >> 16) & 0xFF,
+                (uint8_t)(address_ >> 8) & 0xFF,
+                (uint8_t)(address_) & 0xFF);
 }
 
 }  // namespace mclh_09
