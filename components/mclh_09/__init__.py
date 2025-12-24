@@ -21,6 +21,8 @@ CONFIG_SCHEMA = cv.Schema(
 async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(var, config)
-    await esp32_ble_tracker.register_ble_device(var, config)
+
+    # ✅ Правильная регистрация слушателя для ESPHome 2025
+    cg.add(esp32_ble_tracker.global_esp32_ble_tracker.add_listener(var))
 
     cg.add(var.set_address(config[CONF_MAC_ADDRESS].as_hex))
