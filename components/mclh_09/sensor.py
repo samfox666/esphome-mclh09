@@ -59,7 +59,7 @@ async def to_code(config):
 
     # Получаем BLE-клиента
     paren = await cg.get_variable(config["ble_client_id"])
-    cg.add(var.set_ble_client(paren))
+    cg.add(var.set_ble_client_parent(paren))  # <-- исправлено
 
     # Регистрируем сенсоры
     if CONF_TEMPERATURE in config:
