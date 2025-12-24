@@ -85,4 +85,3 @@ void MCLH09::dump_config() {
 }  // namespace esphome
 
 #endif  // USE_ESP32
-
