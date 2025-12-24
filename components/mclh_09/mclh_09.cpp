@@ -8,10 +8,10 @@ namespace mclh_09 {
 
 static const char *const TAG = "mclh_09";
 
-void MCLH09::on_ble_advertise(esp32_ble_tracker::ESPBTDevice &device) {
+bool MCLH09::parse_device(const esp32_ble_tracker::ESPBTDevice &device) {
   // Проверяем MAC-адрес
   if (device.address_uint64() != this->address_) {
-    return;
+    return false;
   }
 
   ESP_LOGD(TAG, "Found MCLH-09 sensor: %s", device.address_str().c_str());
@@ -20,12 +20,12 @@ void MCLH09::on_ble_advertise(esp32_ble_tracker::ESPBTDevice &device) {
   const auto &manu_data = device.get_manufacturer_data();
   if (manu_data.size() < 15) {
     ESP_LOGD(TAG, "Data too short (%d)", manu_data.size());
-    return;
+    return false;
   }
 
   if (manu_data[0] != 0xFF || (manu_data[1] != 0x90 && manu_data[1] != 0x80)) {
     ESP_LOGD(TAG, "Not MCLH-09  %02X %02X", manu_data[0], manu_data[1]);
-    return;
+    return false;
   }
 
   size_t offset = 3;
@@ -35,6 +35,8 @@ void MCLH09::on_ble_advertise(esp32_ble_tracker::ESPBTDevice &device) {
     uint16_t temp = encode_uint16(manu_data[offset + 1], manu_data[offset]);
     this->temperature_sensor_->publish_state(temp / 10.0f);
   }
+
+  return true;
 }
 
 void MCLH09::dump_config() {
