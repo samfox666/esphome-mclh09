@@ -18,7 +18,7 @@ class MCLH09 : public esp32_ble_tracker::ESPBTDeviceListener, public Component {
   void set_soil_moisture_sensor(sensor::Sensor* soil_moisture) { soil_moisture_sensor_ = soil_moisture; }
   void set_battery_level_sensor(sensor::Sensor* battery_level) { battery_level_sensor_ = battery_level; }
 
-  bool parse_device(const esp32_ble_tracker::ESPBTDevice& device) override;
+  bool parse_device(const esp32_ble_tracker::ESPBTDevice &device) override;
   void dump_config() override;
   float get_setup_priority() const override { return setup_priority::DATA; }
 
