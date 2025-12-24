@@ -1,6 +1,6 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
-from esph8ome.components import sensor
+from esphome.components import sensor
 from esphome.const import (
     CONF_BATTERY_LEVEL,
     CONF_HUMIDITY,
@@ -21,7 +21,7 @@ from . import MCLH09, mclh_09_ns
 DEPENDENCIES = ["mclh_09"]
 
 CONF_UPDATE_INTERVAL = "update_interval"
-CONF_SOIL_MOISTURE = "soil_moisture"  # ← Определяем локально, так как его нет в esphome.const
+CONF_SOIL_MOISTURE = "soil_moisture"
 
 SENSOR_TYPES = {
     CONF_TEMPERATURE: sensor.sensor_schema(
