@@ -2,6 +2,7 @@ import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.components import sensor, esp32_ble_tracker
 from esphome.const import (
+    CONF_ID,
     CONF_MAC_ADDRESS,
     CONF_TEMPERATURE,
     CONF_HUMIDITY,
@@ -78,7 +79,7 @@ async def to_code(config):
     await cg.register_component(var, config)
     cg.add(var.set_address(config[CONF_MAC_ADDRESS].as_hex))
 
-    # Регистрация как BLE listener (правильный способ для ESPHome 2025)
+    # Регистрация как BLE listener
     cg.add(esp32_ble_tracker.global_esp32_ble_tracker.add_listener(var))
 
     if CONF_TEMPERATURE in config:
