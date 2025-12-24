@@ -1,6 +1,5 @@
 #include "mclh_09.h"
 #include "esphome/core/log.h"
-#include "esphome/components/esp32_ble_tracker/esp32_ble_tracker.h"
 
 #ifdef USE_ESP32
 
@@ -22,15 +21,13 @@ bool MCLH09::parse_device(const esp32_ble_tracker::ESPBTDevice &device) {
     return false;
   }
 
-  // Ожидаем: FF 90 80 ... или FF 80 ...
   if (manu_data[0] != 0xFF || (manu_data[1] != 0x90 && manu_data[1] != 0x80)) {
     ESP_LOGD(TAG, "Not MCLH-09 data: %02X %02X", manu_data[0], manu_data[1]);
     return false;
   }
 
-  size_t offset = 3; // Пропускаем FF 90 80
+  size_t offset = 3;
 
-  // Температура: 2 байта, little-endian, в десятых долях °C
   if (this->temperature_sensor_ != nullptr && offset + 2 <= manu_data.size()) {
     uint16_t temp = encode_uint16(manu_data[offset + 1], manu_data[offset]);
     this->temperature_sensor_->publish_state(temp / 10.0f);
@@ -39,7 +36,6 @@ bool MCLH09::parse_device(const esp32_ble_tracker::ESPBTDevice &device) {
     offset += 2;
   }
 
-  // Влажность: 1 байт (%)
   if (this->humidity_sensor_ != nullptr && offset < manu_data.size()) {
     this->humidity_sensor_->publish_state(manu_data[offset]);
     offset += 1;
@@ -47,7 +43,6 @@ bool MCLH09::parse_device(const esp32_ble_tracker::ESPBTDevice &device) {
     offset += 1;
   }
 
-  // Освещённость: 2 байта, little-endian
   if (this->illuminance_sensor_ != nullptr && offset + 2 <= manu_data.size()) {
     uint16_t illum = encode_uint16(manu_data[offset + 1], manu_data[offset]);
     this->illuminance_sensor_->publish_state(illum);
@@ -56,7 +51,6 @@ bool MCLH09::parse_device(const esp32_ble_tracker::ESPBTDevice &device) {
     offset += 2;
   }
 
-  // Влажность почвы: 1 байт (%)
   if (this->soil_moisture_sensor_ != nullptr && offset < manu_data.size()) {
     this->soil_moisture_sensor_->publish_state(manu_data[offset]);
     offset += 1;
@@ -64,7 +58,6 @@ bool MCLH09::parse_device(const esp32_ble_tracker::ESPBTDevice &device) {
     offset += 1;
   }
 
-  // Уровень заряда: 1 байт (%)
   if (this->battery_level_sensor_ != nullptr && offset < manu_data.size()) {
     this->battery_level_sensor_->publish_state(manu_data[offset]);
   }
