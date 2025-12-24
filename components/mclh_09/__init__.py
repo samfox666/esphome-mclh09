@@ -22,7 +22,7 @@ from esphome.const import (
 mclh_ns = cg.esphome_ns.namespace("mclh_09")
 MCLH09 = mclh_ns.class_("MCLH09", cg.Component)
 
-# Конфигурация
+# Определяем схему конфигурации
 CONFIG_SCHEMA = cv.Schema(
     {
         cv.GenerateID(): cv.declare_id(MCLH09),
@@ -55,7 +55,7 @@ CONFIG_SCHEMA = cv.Schema(
     }
 ).extend(cv.COMPONENT_SCHEMA)
 
-
+# Основная функция для генерации кода
 async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(var, config)
@@ -77,5 +77,5 @@ async def to_code(config):
         sens = await sensor.new_sensor(config[CONF_ILLUMINANCE])
         cg.add(var.set_illuminance_sensor(sens))
 
-    # Регистрируем BLE-слушатель через esp32_ble_tracker
+    # Регистрируем BLE-компонент
     await esp32_ble_tracker.register_ble_component(var, config)
