@@ -7,7 +7,9 @@ CODEOWNERS = ["@samfox666"]
 DEPENDENCIES = ["esp32_ble_tracker"]
 
 mclh_09_ns = cg.esphome_ns.namespace("mclh_09")
-MCLH09 = mclh_09_ns.class_("MCLH09", esp32_ble_tracker.ESPBTDeviceListener, cg.Component)
+MCLH09 = mclh_09_ns.class_(
+    "MCLH09", esp32_ble_tracker.ESPBTDeviceListener, cg.Component
+)
 
 DEVICE_SCHEMA = cv.Schema({
     cv.GenerateID(): cv.declare_id(MCLH09),
@@ -25,5 +27,5 @@ async def to_code(config):
         await cg.register_component(var, device_conf)
         cg.add(var.set_address(device_conf[CONF_MAC_ADDRESS].as_hex))
         cg.add(var.set_update_interval(device_conf["update_interval"]))
-        # Регистрируем как BLE listener — без register_ble_device
-        cg.add(esp32_ble_tracker.global_esp32_ble_tracker.add_listener(var))
+        # В ESPHome 2024+ слушатель регистрируется автоматически
+        # благодаря наследованию от ESPBTDeviceListener
