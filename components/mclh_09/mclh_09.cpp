@@ -22,7 +22,7 @@ bool MCLH09::parse_device(const esp32_ble_tracker::ESPBTDevice &device) {
   }
 
   if (manu_data[0] != 0xFF || (manu_data[1] != 0x90 && manu_data[1] != 0x80)) {
-    ESP_LOGD(TAG, "Not MCLH-09 data: %02X %02X", manu_data[0], manu_data[1]);
+    ESP_LOGD(TAG, "Not MCLH-09  %02X %02X", manu_data[0], manu_data[1]);
     return false;
   }
 
