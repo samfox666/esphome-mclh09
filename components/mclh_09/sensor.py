@@ -75,4 +75,4 @@ async def to_code(config):
         cg.add(var.set_illuminance_sensor(sens))
 
     # Регистрируем BLE-компонент (новый способ для 2025.12.2)
-    await esp32_ble_tracker.register_ble_component(var, config)
+    cg.add(esp32_ble_tracker.global_esp32_ble_tracker.add_listener(var))
