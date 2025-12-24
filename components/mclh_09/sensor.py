@@ -50,7 +50,6 @@ CONFIG_SCHEMA = cv.Schema(
             device_class=DEVICE_CLASS_ILLUMINANCE,
             state_class=STATE_CLASS_MEASUREMENT,
         ),
-        # soil_moisture добавим как обычное имя
     }
 ).extend(cv.COMPONENT_SCHEMA)
 
@@ -81,4 +80,4 @@ async def to_code(config):
         cg.add(var.set_soil_moisture_sensor(sens))
 
     # Регистрируем BLE-компонент (новый способ для 2025.12.2)
-    await esp32_ble_tracker.register_ble_component(var, config)
+    cg.add(esp32_ble_tracker.global_esp32_ble_tracker.add_listener(var))
