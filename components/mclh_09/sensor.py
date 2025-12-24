@@ -57,7 +57,6 @@ CONFIG_SCHEMA = cv.Schema(
 # Основная функция для генерации кода
 async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
-    await cg.register_component(var, config)
 
     # Устанавливаем MAC-адрес
     cg.add(var.set_address(config[CONF_MAC_ADDRESS].as_hex))
