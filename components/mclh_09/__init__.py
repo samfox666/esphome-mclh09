@@ -12,6 +12,10 @@ CONFIG_SCHEMA = cv.Schema(
     {
         cv.GenerateID(): cv.declare_id(MCLH09),
         cv.Required("ble_client_id"): cv.use_id(ble_client.BLEClient),  # <-- строка
+        cv.Optional("temperature"): cv.Schema({}),  # <-- добавим пустую схему
+        cv.Optional("humidity"): cv.Schema({}),     # <-- добавим пустую схему
+        cv.Optional("illuminance"): cv.Schema({}),  # <-- добавим пустую схему
+        cv.Optional("battery_level"): cv.Schema({}) # <-- добавим пустую схему
     }
 ).extend(cv.COMPONENT_SCHEMA)
 
@@ -21,3 +25,4 @@ async def to_code(config):
 
     paren = await cg.get_variable(config["ble_client_id"])
     cg.add(var.set_ble_client_parent(paren))
+    
