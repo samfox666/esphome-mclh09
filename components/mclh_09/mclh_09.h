@@ -4,7 +4,6 @@
 #include "esphome/components/sensor/sensor.h"
 
 #ifdef USE_ESP32
-
 #include "esphome/components/esp32_ble_tracker/esp32_ble_tracker.h"
 
 namespace esphome {
