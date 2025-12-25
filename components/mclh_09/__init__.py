@@ -6,7 +6,8 @@ from esphome.const import (
     CONF_MAC_ADDRESS,
 )
 
-AUTO_LOAD = ["sensor", "select", "myhomeiot_ble_client2"]
+# AUTO_LOAD = ["sensor", "select", "myhomeiot_ble_client2"]
+AUTO_LOAD = ["sensor", "select"]
 DEPENDENCIES = ["myhomeiot_ble_host"]
 
 # Namespace
