@@ -1,23 +1,32 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
-from esphome.components import ble_client
-from esphome.const import CONF_ID
+from esphome.components import esp32_ble_tracker
+from esphome import const, automation
+from esphome.const import (
+    CONF_ID,
+    CONF_INTERVAL,
+    CONF_MAC_ADDRESS,
+)
 
 # Namespace
 mclh_ns = cg.esphome_ns.namespace("mclh_09")
 MCLH09 = mclh_ns.class_("MCLH09", cg.Component)
 
-# Схема
+# Определяем схему конфигурации
 CONFIG_SCHEMA = cv.Schema(
     {
         cv.GenerateID(): cv.declare_id(MCLH09),
-        cv.Required("ble_client_id"): cv.use_id(ble_client.BLEClient),  # <-- строка
+        cv.Required(CONF_MAC_ADDRESS): cv.mac_address,
     }
 ).extend(cv.COMPONENT_SCHEMA)
 
+# Основная функция для генерации кода
 async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(var, config)
 
-    paren = await cg.get_variable(config["ble_client_id"])
-    cg.add(var.set_ble_client_parent(paren))
+    # Устанавливаем MAC-адрес
+    cg.add(var.set_address(config[CONF_MAC_ADDRESS].as_hex))
+
+    # Регистрируем BLE-компонент (новый способ для 2025.12.2)
+    cg.add(esp32_ble_tracker.global_esp32_ble_tracker.add_listener(var))
