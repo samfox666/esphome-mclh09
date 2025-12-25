@@ -7,8 +7,13 @@ from esphome.const import (
 )
 
 # Namespace
-mclh_ns = cg.esphome_ns.namespace("mclh_09")
-MCLH09 = mclh_ns.class_("MCLH09", cg.Component)
+# mclh_ns = cg.esphome_ns.namespace("mclh_09")
+# MCLH09 = mclh_ns.class_("MCLH09", cg.Component)
+
+mclh_09_ns = cg.esphome_ns.namespace("mclh_09")
+Mclh09Array = mclh_09_ns.class_(
+    "Mclh09Array", cg.Component
+)
 
 # Определяем схему конфигурации
 CONFIG_SCHEMA = cv.Schema(
