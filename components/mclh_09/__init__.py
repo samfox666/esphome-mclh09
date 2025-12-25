@@ -4,9 +4,6 @@ from esphome.components import esp32_ble_tracker, myhomeiot_ble_host
 from esphome.const import (
     CONF_ID,
     CONF_MAC_ADDRESS,
-    CONF_ERROR_COUNTING,
-    CONF_RAW_SOIL,
-    CONF_BLE_HOST,
 )
 
 # Namespace
