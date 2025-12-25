@@ -6,6 +6,9 @@ from esphome.const import (
     CONF_MAC_ADDRESS,
 )
 
+AUTO_LOAD = ["sensor", "select", "myhomeiot_ble_client2"]
+DEPENDENCIES = ["myhomeiot_ble_host"]
+
 # Namespace
 mclh_ns = cg.esphome_ns.namespace("mclh_09")
 MCLH09 = mclh_ns.class_("MCLH09", cg.Component)
@@ -25,7 +28,11 @@ CONFIG_SCHEMA = cv.Schema(
         cv.Required(CONF_BLE_HOST): cv.use_id(myhomeiot_ble_host.MyHomeIOT_BLEHost),
     }
 ).extend(cv.COMPONENT_SCHEMA)
-
+FORCE_UPDATE_ACTION_SCHEMA = cv.Schema(
+    {
+        cv.GenerateID(CONF_ID): cv.use_id(MCLH09),
+    }
+)
 # Основная функция для генерации кода
 async def to_code(config):
     addr_list = []
