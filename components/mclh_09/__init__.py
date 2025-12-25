@@ -14,6 +14,7 @@ mclh_09_ns = cg.esphome_ns.namespace("mclh_09")
 Mclh09Array = mclh_09_ns.class_(
     "Mclh09Array", cg.Component
 )
+Mclh09ArrayForceUpdateAction = mclh_09_ns.class_("Mclh09ArrayForceUpdateAction", automation.Action)
 
 # Определяем схему конфигурации
 CONFIG_SCHEMA = cv.Schema(
