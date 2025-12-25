@@ -10,6 +10,11 @@ from esphome.const import (
 mclh_ns = cg.esphome_ns.namespace("mclh_09")
 MCLH09 = mclh_ns.class_("MCLH09", cg.Component)
 
+CONF_BLE_HOST = "ble_host"
+CONF_ERROR_COUNTING = "error_counting"
+CONF_RAW_SOIL = "raw_soil"
+CONF_INTERVAL = "15min"
+
 # Определяем схему конфигурации
 CONFIG_SCHEMA = cv.Schema(
     {
