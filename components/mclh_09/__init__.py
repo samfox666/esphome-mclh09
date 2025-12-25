@@ -27,3 +27,4 @@ async def to_code(config):
 
     # Регистрируем BLE-компонент
     cg.add(esp32_ble_tracker.global_esp32_ble_tracker.add_listener(var))
+    
