@@ -23,6 +23,7 @@ CONFIG_SCHEMA = cv.Schema(
     {
         cv.GenerateID(): cv.declare_id(MCLH09),
         cv.Required(CONF_MAC_ADDRESS): cv.ensure_list(cv.mac_address),
+        cv.GenerateID(CONF_BLE_HOST): cv.use_id(myhomeiot_ble_host.MyHomeIOT_BLEHost),
         cv.Optional(CONF_ERROR_COUNTING, default=False): cv.boolean,
         cv.Optional(CONF_RAW_SOIL, default=False): cv.boolean,
         cv.Required(CONF_BLE_HOST): cv.use_id(myhomeiot_ble_host.MyHomeIOT_BLEHost),
